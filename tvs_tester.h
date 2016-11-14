@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QDebug>
 #include <QtSerialPort>
-#include "rigol_ds1102e.h"
 //#include "rigol_ds1xxx.h"
 
 class TVS_TESTER : /*public RIGOL_DS1102E,*/ public QSerialPort {
@@ -20,7 +19,7 @@ public:
 
 private:
 //    RIGOL_DS1XXX osc2;
-    RIGOL_DS1102E osc;
+
 
     const char POLYNOMIAL;
     QByteArray Data;

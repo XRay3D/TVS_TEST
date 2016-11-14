@@ -7,6 +7,7 @@
 #include <QClipboard>
 
 #include "tvs_tester.h"
+#include "rigol_ds1102e.h"
 #include "settings_and_data.h"
 
 namespace Ui {
@@ -36,7 +37,7 @@ private:
     QThread workerThread;
 
     TVS_TESTER* tester;
-
+    RIGOL_DS1102E *osc;
     SETTINGS_AND_DATA sai;
 
     QClipboard* clipboard;

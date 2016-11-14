@@ -27,7 +27,7 @@ bool TVS_TESTER::FindStend()
             setFlowControl(NoFlowControl);
 
             if (open(QSerialPort::ReadWrite)) {
-                Sleep(100);
+                //Sleep(100);
                 write(Parcel(-1, 0));
                 waitForReadyRead(1000);
                 waitForReadyRead(100);
@@ -77,7 +77,6 @@ void TVS_TESTER::Test()
         qDebug() << "Test ERR";
     }
     double Voltage, Current;
-    osc.GetTestResult(Voltage, Current);
     emit MeasureReady(QString("%1\t%2\t%3").arg(Voltage).arg(Current).arg(Voltage * Current).replace('.', ','));
 }
 

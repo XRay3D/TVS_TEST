@@ -5,33 +5,41 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , tester(new TVS_TESTER)
+    , osc(new RIGOL_DS1102E)
     , sai(this)
     , clipboard(QApplication::clipboard())
     , measCount(0)
 {
     ui->setupUi(this);
+    ui->lblOsc->setText(osc->connected);
 
-    ui->horizontalSlider->installEventFilter(this);
-    this->installEventFilter(this);
+    //    double Voltage, Current;
+    //    osc->GetTestResult(Voltage, Current);
+    //    qDebug() << Voltage << Current;
 
-    tester->moveToThread(&workerThread);
-    connect(&workerThread, &QThread::finished, tester, &QObject::deleteLater);
-    connect(ui->pushButton_Ping, &QPushButton::clicked, tester, &TVS_TESTER::FindStend);
-    connect(ui->pushButton_test, &QPushButton::clicked, tester, &TVS_TESTER::Test);
-    connect(tester, &TVS_TESTER::MeasureReady, ui->lineEdit, &QLineEdit::setText);
-    connect(this, &MainWindow::SetCap, tester, &TVS_TESTER::SetCap);
-    connect(this, &MainWindow::Test, tester, &TVS_TESTER::Test);
-    workerThread.start();
+    //    ui->horizontalSlider->installEventFilter(this);
+    //    this->installEventFilter(this);
 
-    connect(&sai, &SETTINGS_AND_DATA::HideEvent, this, &QMainWindow::close);
+    //    tester->moveToThread(&workerThread);
+    //    connect(&workerThread, &QThread::finished, tester, &QObject::deleteLater);
+    //    connect(ui->pushButton_Ping, &QPushButton::clicked, tester, &TVS_TESTER::FindStend);
+    //    connect(ui->pushButton_test, &QPushButton::clicked, tester, &TVS_TESTER::Test);
+    //    connect(tester, &TVS_TESTER::MeasureReady, ui->lineEdit, &QLineEdit::setText);
+    //    connect(this, &MainWindow::SetCap, tester, &TVS_TESTER::SetCap);
+    //    connect(this, &MainWindow::Test, tester, &TVS_TESTER::Test);
+    //    workerThread.start();
 
-    ui->comboBox->addItems(sai.TVSList());
+    //    connect(&sai, &SETTINGS_AND_DATA::HideEvent, this, &QMainWindow::close);
+
+    //    ui->comboBox->addItems(sai.TVSList());
+    connect(osc, &RIGOL_DS1102E::addData, ui->graphicsView, &Chart::addData);
+    osc->CommandButton1_Click();
 }
 
 MainWindow::~MainWindow()
 {
-    workerThread.quit();
-    workerThread.wait();
+    //    workerThread.quit();
+    //    workerThread.wait();
     delete ui;
 }
 

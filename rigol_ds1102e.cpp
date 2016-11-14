@@ -5,31 +5,32 @@
 RIGOL_DS1102E::RIGOL_DS1102E()
 {
 
-    /*=============================================*/
     ViUInt32 Nmatches;
     ViFindList List;
     char Matches[200];
 
-    qDebug() << viOpenDefaultRM(&DefaultRM);
-    qDebug() << viFindRsrc(DefaultRM, "USB?*", &List, &Nmatches, Matches);
-    qDebug() << viOpen(DefaultRM, Matches, VI_NULL, VI_NULL, &Vi);
-    qDebug() << "DS" << Vi;
+    viOpenDefaultRM(&DefaultRM);
+    viFindRsrc(DefaultRM, (ViString) "USB?*", &List, &Nmatches, Matches);
+    viOpen(DefaultRM, Matches, VI_NULL, VI_NULL, &Vi);
 
+    SetComand("*IDN?");
     QByteArray Res;
-    Res.fill(0, 100);
-    qDebug() << SetComand("*IDN?");
-    qDebug() << GetData(Res.data());
-    Res.resize(strlen(Res.data()));
-    qDebug() << Res;
+    GetData(Res);
+    if (Vi > 0) {
+        connected = "ОСЦИЛЛОГРАФ ПОДКЛЮЧЕН - " + Res.split(',')[1] + " (" + QString().setNum(Vi) + ")";
+    }
+    else {
+        connected = "ОСЦИЛЛОГРАФ НЕПОДКЛЮЧЕН!";
+    }
 
-    //CommandButton1_Click();
+    CommandButton1_Click();
 }
 
 RIGOL_DS1102E::~RIGOL_DS1102E()
 {
     if (Vi > 0) {
-        qDebug() << viClose(Vi);
-        qDebug() << viClose(DefaultRM);
+        qDebug() << "viClose" << viClose(Vi);
+        qDebug() << "viClose" << viClose(DefaultRM);
     }
 }
 
@@ -37,47 +38,76 @@ void RIGOL_DS1102E::CommandButton1_Click()
 {
     if (Vi == 0)
         return;
-    //    qDebug() << SetChannel(1, "COUP DC");
-    //    qDebug() << SetChannel(2, "COUP DC");
 
-    //    qDebug() << SetChannel(1, "DISP ON");
-    //    qDebug() << SetChannel(2, "DISP ON");
+    //        qDebug() << SET_CHAN(1, "COUP DC");
+    //        qDebug() << SET_CHAN(1, "DISP ON");
+    //        qDebug() << SET_CHAN(1, "INV ON");
+    //        qDebug() << SET_CHAN(1, "PROB 10"); //ATTENUATOR
+    //        qDebug() << SET_CHAN(1, "SCAL " & Trim(str(GetCellVal(I, 13)))); //current
+    //        qDebug() << SET_CHAN(1, "OFFS " & Trim(str(GetCellVal(I, 14))));
 
-    //    qDebug() << SetChannel(1, "INV ON");
-    //    qDebug() << SetChannel(2, "INV OFF");
+    //        qDebug() << SET_CHAN(2, "COUP DC");
+    //        qDebug() << SET_CHAN(2, "INV OFF");
+    //        qDebug() << SET_CHAN(2, "DISP ON");
+    //        qDebug() << SET_CHAN(2, "PROB 10"); //ATTENUATOR
+    //        qDebug() << SET_CHAN(2, "SCAL " & Trim(str(GetCellVal(I, 15)))); //voltage
+    //        qDebug() << SET_CHAN(2, "OFFS " & Trim(str(GetCellVal(I, 16))));
 
-    //    qDebug() << SetChannel(1, "OFFS 0");
-    //    qDebug() << SetChannel(2, "OFFS 0");
+    //        qDebug() << SET_COMAND(":MATH:DISPlay OFF");
 
-    //    qDebug() << SetChannel(1, "PROB 10"); //ATTENUATOR
-    //    qDebug() << SetChannel(2, "PROB 10");
+    //        qDebug() << SET_COMAND(":TRIG:EDGE:SOUR CHAN1");
+    //        qDebug() << SET_COMAND(":TRIG:EDGE:LEV " & Trim(str(GetCellVal(I, 17))));
+    //        qDebug() << SET_COMAND(":TRIG:EDGE:SWE NORM");
+    //        qDebug() << SET_COMAND(":TRIG:EDGE:COUP DC");
+    //        qDebug() << SET_COMAND(":TRIG:EDGE:SLOP NEG");
 
-    //    qDebug() << SetChannel(1, "SCAL 10"); //voltage
-    //    qDebug() << SetChannel(2, "SCAL 20"); //voltage
+    //        qDebug() << SET_COMAND(":TIM:MODE MAIN");
+    //        qDebug() << SET_COMAND(":TIM:OFFS 0.001");
+    //        qDebug() << SET_COMAND(":TIM:SCAL 0.0002");
+    //        qDebug() << SET_COMAND(":TIM:FORM YT");
 
-    //    qDebug() << SetComand(":MATH:DISPlay OFF");
+    //    SetChannel(1, "COUP DC");
+    //    SetChannel(2, "COUP DC");
 
-    //    qDebug() << SetComand(":TRIG:EDGE:SOUR CHAN1");
-    //    qDebug() << SetComand(":TRIG:EDGE:LEV 10");
-    //    qDebug() << SetComand(":TRIG:EDGE:SWE NORM");
-    //    qDebug() << SetComand(":TRIG:EDGE:COUP DC");
-    //    qDebug() << SetComand(":TRIG:EDGE:SLOP NEG");
+    //    SetChannel(1, "DISP ON");
+    //    SetChannel(2, "DISP ON");
 
-    //    qDebug() << SetComand(":TIM:MODE MAIN");
-    //    qDebug() << SetComand(":TIM:OFFS 0.001");
-    //    qDebug() << SetComand(":TIM:SCAL 0.0002");
-    //    qDebug() << SetComand(":TIM:FORM YT");
+    //    SetChannel(1, "INV ON");
+    //    SetChannel(2, "INV OFF");
 
-    QByteArray Res;
-    Res.fill(0, 1000);
-    qDebug() << SetComand(":WAVeform:DATA? CHAN1");
-    qDebug() << GetData(Res.data());
-    qDebug() << Res;
+    //    SetChannel(1, "OFFS 0");
+    //    SetChannel(2, "OFFS 0");
 
-    Res.fill(0, 1000);
-    qDebug() << SetComand(":WAVeform:DATA? CHAN2");
-    qDebug() << GetData(Res.data());
-    qDebug() << Res;
+    //    SetChannel(1, "PROB 10"); //ATTENUATOR
+    //    SetChannel(2, "PROB 10");
+
+    //    SetChannel(1, "SCAL 10"); //voltage
+    //    SetChannel(2, "SCAL 20"); //voltage
+
+    //    SetComand(":MATH:DISPlay OFF");
+
+    //    SetComand(":TRIG:EDGE:SOUR CHAN1");
+    //    SetComand(":TRIG:EDGE:LEV 10");
+    //    SetComand(":TRIG:EDGE:SWE NORM");
+    //    SetComand(":TRIG:EDGE:COUP DC");
+    //    SetComand(":TRIG:EDGE:SLOP NEG");
+
+    //    SetComand(":TIM:MODE MAIN");
+    //    SetComand(":TIM:OFFS 0.001");
+    //    SetComand(":TIM:SCAL 0.0002");
+    //    SetComand(":TIM:FORM YT");
+
+    QByteArray CHAN1;
+    qDebug() << "SetComand" << SetComand(":WAVeform:DATA? CHAN1");
+    qDebug() << "GetData" << GetData(CHAN1);
+    CHAN1.remove(0, 10);
+
+    QByteArray CHAN2;
+    qDebug() << "SetComand" << SetComand(":WAVeform:DATA? CHAN2");
+    qDebug() << "GetData" << GetData(CHAN2);
+    CHAN2.remove(0, 10);
+
+    emit addData(CHAN1, CHAN2);
 
     //    qDebug() << SetComand(":WAVeform:DATA? MATH");
     //    qDebug() << GetData(Res);
@@ -87,25 +117,30 @@ void RIGOL_DS1102E::CommandButton1_Click()
     //        Next
 }
 
-ViStatus RIGOL_DS1102E::SetChannel(int chNum, char* s)
+ViStatus RIGOL_DS1102E::SetChannel(int chNum, const QString& s)
 {
     if (Vi == 0)
         return -1;
-    return viVPrintf(Vi, QString(":CHAN%1:%2\n").arg(chNum).arg(s).toLocal8Bit().data(), 0);
+    ViStatus Status = viVPrintf(Vi, QString(":CHAN%1:%2\n").arg(chNum).arg(s).toLocal8Bit().data(), 0);
+    qDebug() << "SetChannel" << Status << s;
+    return Status;
 }
 
-ViStatus RIGOL_DS1102E::SetComand(char* s)
+ViStatus RIGOL_DS1102E::SetComand(const QString& s)
 {
     if (Vi == 0)
         return -1;
     return viPrintf(Vi, QString(s).append('\n').toLocal8Bit().data());
 }
 
-ViStatus RIGOL_DS1102E::GetData(char* s)
+ViStatus RIGOL_DS1102E::GetData(QByteArray& data)
 {
     if (Vi == 0)
         return -1;
-    return viScanf(Vi, "%t\n", s);
+    data.fill(0, 1000);
+    ViStatus Status = viScanf(Vi, (ViString) "%t\n", data.data());
+    data.resize(strlen(data.data()));
+    return Status;
 }
 
 ViStatus RIGOL_DS1102E::GetTestResult(double& v, double& i)
@@ -114,13 +149,11 @@ ViStatus RIGOL_DS1102E::GetTestResult(double& v, double& i)
         return -1;
 
     QByteArray Data;
-    Data.fill(0, 100);
     SetComand(":MEASure:VMAX? CHAN1");
-    GetData(Data.data());
+    GetData(Data);
     i = Data.toFloat();
-    Data.fill(0, 100);
     SetComand(":MEASure:VMAX? CHAN2");
-    GetData(Data.data());
+    GetData(Data);
     v = Data.toFloat();
     qDebug() << i << v << i * v;
 }

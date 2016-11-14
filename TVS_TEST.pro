@@ -4,7 +4,11 @@
 #
 #-------------------------------------------------
 
-QT       += core gui serialport sql
+QT += core gui
+QT += charts
+QT += serialport
+QT += sql
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,7 +20,8 @@ SOURCES += main.cpp\
 		mainwindow.cpp \
 	rigol_ds1102e.cpp \
 	tvs_tester.cpp \
-	settings_and_data.cpp
+	settings_and_data.cpp \
+    chart.cpp
 
 HEADERS  += mainwindow.h \
 	rigol_ds1102e.h \
@@ -24,9 +29,14 @@ HEADERS  += mainwindow.h \
 	visa/visa.h \
 	visa/visatype.h \
 	visa/vpptype.h \
-	settings_and_data.h
+	settings_and_data.h \
+    chart.h
 
 FORMS    += mainwindow.ui \
 	settings_and_data.ui
 
-LIBS += -lD:/PRO/QT/CHLAMINAMANADA/TVS_TEST/visa/visa32
+
+win32: LIBS += -L$$PWD/./ -lvisa32
+
+INCLUDEPATH += $$PWD/.
+DEPENDPATH += $$PWD/.
